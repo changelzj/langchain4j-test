@@ -1,0 +1,18 @@
+langchain4j:
+  open-ai:
+
+    chat-model:
+      base-url: https://api.deepseek.com
+      api-key: sk-2e155ecb3c2c498287ee050800c78607
+      model-name: deepseek-reasoner
+      log-requests: true
+      log-responses: true
+      return-thinking: true
+
+
+server:
+  port: 8080
+
+logging:
+  level:
+    dev.langchain4j: debug

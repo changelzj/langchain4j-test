@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.example</groupId>
+    <artifactId>langchain4j-test</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>langchain4j-helloworld</module>
+        <module>langchain4j-prompt</module>
+        <module>langchain4j-high-prompt</module>
+        <module>langchain4j-function</module>
+        <module>langchain4j-rag</module>
+        <module>langchain4j-observability</module>
+    </modules>
+
+
+
+</project>
