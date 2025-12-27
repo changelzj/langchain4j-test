@@ -1,27 +1,28 @@
 package org.example.controller;
 
 import jakarta.annotation.Resource;
-import org.example.ai.RagAssistance;
+import org.example.ai.assistant.ToolAssistant;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 
+
 @RestController
-@RequestMapping("rag-chat")
-public class RagController {
+@RequestMapping("ai")
+public class ChatController {
 
     @Resource
-    private RagAssistance assistance;
+    private ToolAssistant toolAssistant;
 
-    @GetMapping(value = "stream", produces = "text/html; charset=utf-8")
-    public Flux<String> stream(String msg, String msgId) {
-        return assistance.chat(msg, msgId);
+    @GetMapping(value = "agent-stream", produces = "text/html;charset=utf-8")
+    public Flux<String> agent(String msg, String chatId) {
+        return toolAssistant.chat(msg, chatId);
 
     }
 
 
 }
-
 
 

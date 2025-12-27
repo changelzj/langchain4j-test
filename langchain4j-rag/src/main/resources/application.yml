@@ -7,10 +7,6 @@ logging:
   level:
     dev.langchain4j: debug
 
-#spring:
-#  main:
-#    allow-bean-definition-overriding: true
-
 langchain4j:
   open-ai:
     embedding-model:

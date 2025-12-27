@@ -1,14 +1,19 @@
 package org.example.test;
 
+import dev.langchain4j.data.document.Document;
+import dev.langchain4j.data.document.loader.FileSystemDocumentLoader;
+import dev.langchain4j.data.document.parser.apache.pdfbox.ApachePdfBoxDocumentParser;
 import dev.langchain4j.data.embedding.Embedding;
 import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.model.output.Response;
 import dev.langchain4j.store.embedding.EmbeddingStore;
+import dev.langchain4j.store.embedding.EmbeddingStoreIngestor;
 import jakarta.annotation.Resource;
 import org.example.Main;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+
 
 @SpringBootTest(classes = Main.class)
 public class RagTest {
@@ -18,6 +23,9 @@ public class RagTest {
 
     @Resource
     private EmbeddingModel  embeddingModel;
+
+    @Resource
+    EmbeddingStoreIngestor ingestor;
 
     @Test
     public void index() {
@@ -30,6 +38,7 @@ public class RagTest {
                 
                 
                 """;
+
         Response<Embedding> response = embeddingModel.embed(msg);
         Embedding embedding = response.content();
 
@@ -38,5 +47,18 @@ public class RagTest {
         segment.metadata().put("doc", "1.txt");
 
         embeddingStore.add(embedding, segment);
+    }
+
+    @Test
+    public void pdf() {
+        Document document = FileSystemDocumentLoader.loadDocument("D:/毕业设计/装订/答辩.pdf",
+                new ApachePdfBoxDocumentParser());
+
+
+            document.metadata().put("author", "lzj");
+            document.metadata().put("doc", "答辩.pdf");
+            ingestor.ingest(document);
+
+
     }
 }

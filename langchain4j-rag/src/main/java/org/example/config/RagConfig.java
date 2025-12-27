@@ -1,14 +1,6 @@
 package org.example.config;
 
-import dev.langchain4j.data.document.Document;
 import dev.langchain4j.data.document.DocumentSplitter;
-import dev.langchain4j.data.document.loader.ClassPathDocumentLoader;
-import dev.langchain4j.data.document.loader.FileSystemDocumentLoader;
-import dev.langchain4j.data.document.loader.UrlDocumentLoader;
-import dev.langchain4j.data.document.parser.TextDocumentParser;
-import dev.langchain4j.data.document.parser.apache.pdfbox.ApachePdfBoxDocumentParser;
-import dev.langchain4j.data.document.parser.apache.poi.ApachePoiDocumentParser;
-import dev.langchain4j.data.document.parser.apache.tika.ApacheTikaDocumentParser;
 import dev.langchain4j.data.document.splitter.*;
 import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.memory.ChatMemory;
@@ -21,18 +13,17 @@ import dev.langchain4j.rag.content.retriever.ContentRetriever;
 import dev.langchain4j.rag.content.retriever.EmbeddingStoreContentRetriever;
 import dev.langchain4j.store.embedding.EmbeddingStore;
 import dev.langchain4j.store.embedding.EmbeddingStoreIngestor;
-import dev.langchain4j.store.embedding.inmemory.InMemoryEmbeddingStore;
+import dev.langchain4j.store.embedding.filter.MetadataFilterBuilder;
 import dev.langchain4j.store.embedding.qdrant.QdrantEmbeddingStore;
 import dev.langchain4j.store.memory.chat.ChatMemoryStore;
 import dev.langchain4j.store.memory.chat.InMemoryChatMemoryStore;
-import io.qdrant.client.QdrantClient;
-import io.qdrant.client.QdrantGrpcClient;
+
 import jakarta.annotation.Resource;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
-import java.util.List;
 
 @Configuration
 public class RagConfig {
@@ -74,41 +65,14 @@ public class RagConfig {
     }
 
 
-
-    /*@Bean
-    @Primary
-    public EmbeddingStore<TextSegment> embeddingStore() {
-        //UrlDocumentLoader.load()
-        //FileSystemDocumentLoader.loadDocument()
-        //TextDocumentParser
-        //ApachePdfBoxDocumentParser
-       // ApacheTikaDocumentParser
-        //ApachePoiDocumentParser
-
-        //DocumentByParagraphSplitter
-       // DocumentByLineSplitter
-        //DocumentBySentenceSplitter
-       // DocumentByWordSplitter
-        //DocumentByCharacterSplitter
-       // DocumentByRegexSplitter
-        //DocumentSplitters.recursive()
-
-        List<Document> documents = ClassPathDocumentLoader.loadDocuments("document", new ApacheTikaDocumentParser());
-
-        InMemoryEmbeddingStore embeddingStore = new InMemoryEmbeddingStore();
-
-        EmbeddingStoreIngestor ingestor = EmbeddingStoreIngestor.builder()
-                .embeddingStore(embeddingStore)
-                .documentSplitter(documentSplitter() ) //指定分割器
+    @Bean
+    public EmbeddingStoreIngestor ingestor() {
+        return EmbeddingStoreIngestor.builder()
+                .embeddingStore(embeddingStore() )
+                .documentSplitter( DocumentSplitters.recursive(1000, 100) ) //指定分割器
                 .embeddingModel(embeddingModel)
                 .build();
-
-        ingestor.ingest(documents);
-
-        return embeddingStore;
-
-    }*/
-
+    }
 
 
     @Bean
@@ -117,22 +81,16 @@ public class RagConfig {
                 .embeddingStore(embeddingStore)
                 .maxResults(7) //返回片段数
                 .minScore(0.5) //最小余弦相似度
-                .embeddingModel(embeddingModel)
+                .embeddingModel(embeddingModel) //使用自己定义的向量模型
+                .dynamicFilter(query -> {
+                    Object chatMemoryId = query.metadata().chatMemoryId();
+
+                    String userId = chatMemoryId.toString();
+                    return MetadataFilterBuilder.metadataKey("author").isEqualTo(userId);
+                })
                 .build();
     }
 
-    @Bean
-    public DocumentSplitter documentSplitter() {
-        return DocumentSplitters.recursive(1000, 100);
-    }
-
-
-//    @Bean
-//    public QdrantClient qdrantClient() {
-//        QdrantGrpcClient.Builder builder = QdrantGrpcClient
-//                .newBuilder("192.168.228.104", 6334, false);
-//        return new QdrantClient(builder.build());
-//    }
 
 
     @Bean

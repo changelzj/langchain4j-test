@@ -1,0 +1,30 @@
+
+server:
+  port: 8080
+
+logging:
+  level:
+    dev.langchain4j: info
+
+spring:
+  datasource:
+    driver-class-name: org.h2.Driver
+    username: root
+    password: test
+  sql:
+    init:
+      schema-locations: classpath:db/schema-h2.sql
+      data-locations: classpath:db/data-h2.sql
+      mode: always
+      platform: h2
+
+
+#langchain4j:
+#  open-ai:
+#    streaming-chat-model:
+#      base-url: https://api.deepseek.com
+#      api-key: ${DSKEY}
+#      model-name: deepseek-reasoner
+#      log-requests: true
+#      log-responses: true
+#      return-thinking: true
