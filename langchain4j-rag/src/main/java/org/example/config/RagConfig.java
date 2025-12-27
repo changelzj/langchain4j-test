@@ -22,8 +22,11 @@ import dev.langchain4j.rag.content.retriever.EmbeddingStoreContentRetriever;
 import dev.langchain4j.store.embedding.EmbeddingStore;
 import dev.langchain4j.store.embedding.EmbeddingStoreIngestor;
 import dev.langchain4j.store.embedding.inmemory.InMemoryEmbeddingStore;
+import dev.langchain4j.store.embedding.qdrant.QdrantEmbeddingStore;
 import dev.langchain4j.store.memory.chat.ChatMemoryStore;
 import dev.langchain4j.store.memory.chat.InMemoryChatMemoryStore;
+import io.qdrant.client.QdrantClient;
+import io.qdrant.client.QdrantGrpcClient;
 import jakarta.annotation.Resource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -42,7 +45,7 @@ public class RagConfig {
 
         return OpenAiStreamingChatModel.builder()
                 .baseUrl("https://api.deepseek.com/")
-                .apiKey(System.getProperty("OPEN_API_KEY"))
+                .apiKey(System.getenv("DSKEY"))
                 .modelName("deepseek-reasoner")
                 .logRequests(true)
                 .logResponses(true)
@@ -72,7 +75,7 @@ public class RagConfig {
 
 
 
-    @Bean
+    /*@Bean
     @Primary
     public EmbeddingStore<TextSegment> embeddingStore() {
         //UrlDocumentLoader.load()
@@ -96,7 +99,7 @@ public class RagConfig {
 
         EmbeddingStoreIngestor ingestor = EmbeddingStoreIngestor.builder()
                 .embeddingStore(embeddingStore)
-                .documentSplitter(documentSplitter() )
+                .documentSplitter(documentSplitter() ) //指定分割器
                 .embeddingModel(embeddingModel)
                 .build();
 
@@ -104,7 +107,7 @@ public class RagConfig {
 
         return embeddingStore;
 
-    }
+    }*/
 
 
 
@@ -124,6 +127,24 @@ public class RagConfig {
     }
 
 
+//    @Bean
+//    public QdrantClient qdrantClient() {
+//        QdrantGrpcClient.Builder builder = QdrantGrpcClient
+//                .newBuilder("192.168.228.104", 6334, false);
+//        return new QdrantClient(builder.build());
+//    }
 
+
+    @Bean
+    @Primary
+    public EmbeddingStore<TextSegment> embeddingStore() {
+
+        return QdrantEmbeddingStore.builder()
+                .host("192.168.228.104")
+                .port(6334)
+                .collectionName("test-qdrant")
+                .build();
+
+    }
 }
 
