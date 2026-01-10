@@ -37,7 +37,6 @@
 
     <dependencies>
 
-
         <dependency>
             <groupId>dev.langchain4j</groupId>
             <artifactId>langchain4j-spring-boot-starter</artifactId>
@@ -53,10 +52,6 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>dev.langchain4j</groupId>
-            <artifactId>langchain4j-reactor</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -65,16 +60,11 @@
         </dependency>
 
         <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
-            <version>3.5.14</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
         </dependency>
 
-        <!-- H2数据库驱动 -->
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-        </dependency>
 
     </dependencies>
 
