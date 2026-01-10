@@ -16,6 +16,7 @@
         <module>langchain4j-function</module>
         <module>langchain4j-rag</module>
         <module>langchain4j-observability</module>
+        <module>langchain4j-multimodal</module>
     </modules>
 
 
